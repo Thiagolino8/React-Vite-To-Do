@@ -1,6 +1,6 @@
 import './styles/App.css';
 import { Route, Routes } from 'react-router-dom';
-import Tasks from './screens/Tasks';
+import Tasks from './screens/ToDo';
 import Details from './screens/Details';
 import {Page404} from './screens/404';
 
