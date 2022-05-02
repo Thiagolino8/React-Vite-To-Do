@@ -8,6 +8,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "immer": "^9.0.12",
     "mobx": "^6.5.0",
     "mobz": "^0.20.0",
     "nanoid": "^3.3.1",

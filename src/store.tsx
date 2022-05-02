@@ -1,81 +1,84 @@
-import create from 'zustand';
-import { nanoid } from 'nanoid';
-import { createTrackedSelector } from 'react-tracked';
-import { persist } from 'zustand/middleware';
+import create, { State, StateCreator } from 'zustand'
+import { nanoid } from 'nanoid'
+import { createTrackedSelector } from 'react-tracked'
+import { persist } from 'zustand/middleware'
+import produce, { Draft } from 'immer'
 
 export interface Task {
-	id: string;
-	title: string;
-	completed: boolean;
-	details: string;
+	id: string
+	title: string
+	completed: boolean
+	details: string
 }
 
 interface TaskStore {
-	tasks: Task[];
-	search: string;
-	addTask: (title: string) => void;
-	changeDetails: (title: string, details: string) => void;
-	toggleTask: (id: string) => void;
-	deleteTask: (id: string) => void;
-	setSearch: (search: string) => void;
-	updateTask: (id: string, title: string) => void;
-	getTaskByTitle: (title: string) => Task | undefined;
-	getTaskById: (id: string) => Task | undefined;
-	taskAlreadyExists: (title: string) => boolean;
-	formatTaskTitle: (title: string) => string;
+	tasks: Task[]
+	search: string
+	addTask: (title: string) => void
+	changeDetails: (title: string, details: string) => void
+	toggleTask: (id: string) => void
+	deleteTask: (id: string) => void
+	setSearch: (search: string) => void
+	updateTask: (id: string, title: string) => void
+	getTaskByTitle: (title: string) => Task | undefined
+	getTaskById: (id: string) => Task | undefined
+	taskAlreadyExists: (title: string) => boolean
+	formatTaskTitle: (title: string) => string
 }
 
-export const useStore =
-	createTrackedSelector(create<TaskStore>(
+const immer =
+	<T extends State>(config: StateCreator<T, (fn: (draft: Draft<T>) => void) => void>): StateCreator<T> =>
+	(set, get, api) =>
+		config((fn) => set(produce<T>(fn)), get, api)
+
+export const useStore = createTrackedSelector(
+	create<TaskStore>(
 		persist(
-			(set, get) => ({
+			immer((set, get) => ({
 				tasks: [],
 
 				search: '',
 
 				addTask: (title: string) =>
-					set((state) => {
-						if (!title) return { ...state };
-						title = get().formatTaskTitle(title);
-						if (get().taskAlreadyExists(title)) return { ...state };
-						return {
-							tasks: [...state.tasks, { id: nanoid(), title, completed: false, details: '' }],
-						};
+					set((draft) => {
+						if (!title) return
+						title = get().formatTaskTitle(title)
+						if (get().taskAlreadyExists(title)) return
+						draft.tasks.push({ id: nanoid(), title, completed: false, details: '' })
 					}),
 
 				changeDetails: (title: string, details: string) => {
-					set((state) => ({
-						...state,
-						tasks: state.tasks.map((task) => (task.title === title ? { ...task, details } : task)),
-					}));
+					set((draft) => {
+						draft.tasks = draft.tasks.map((task) => (task.title === title ? { ...task, details } : task))
+					})
 				},
 
 				toggleTask: (id: string) =>
-					set((state) => ({
-						tasks: state.tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task)),
-					})),
+					set((draft) => {
+						draft.tasks = draft.tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
+					}),
 
 				deleteTask: (id: string) =>
-					set((state) => ({
-						tasks: state.tasks.filter((task) => task.id !== id),
-					})),
+					set((draft) => {
+						draft.tasks = draft.tasks.filter((task) => task.id !== id)
+					}),
 
 				setSearch: (search: string) =>
-					set(() => ({
-						search,
-					})),
+					set((draft) => {
+						draft.search = search
+					}),
 
 				updateTask: (id: string, title: string) => {
 					if (!title) {
-						get().deleteTask(id);
-						return;
+						get().deleteTask(id)
+						return
 					}
-					if (get().taskAlreadyExists(title)) return;
-					set((state) => ({
-						tasks: state.tasks.map((task) =>
+					if (get().taskAlreadyExists(title)) return
+					set((draft) => {
+						draft.tasks = draft.tasks.map((task) =>
 							task.id === id ? { ...task, title: get().formatTaskTitle(title) } : task
-						),
-					}));
+						)
+					})
 				},
 
 				getTaskByTitle: (title: string) => get().tasks.find((task) => task.title === get().formatTaskTitle(title)),
@@ -86,10 +89,10 @@ export const useStore =
 							.tasks.map((task) => get().formatTaskTitle(task.title) === get().formatTaskTitle(title))
 							.includes(true)
 					) {
-						alert('Task already exists');
-						return true;
+						alert('Task already exists')
+						return true
 					}
-					return false;
+					return false
 				},
 
 				formatTaskTitle: (title: string) =>
@@ -99,12 +102,13 @@ export const useStore =
 						.join(' '),
 
 				getTaskById: (id: string) => get().tasks.find((task) => task.id === id),
-			}),
+			})),
 			{ name: 'taskStore' }
 		)
-	))
-	
+	)
+)
+
 export const filteredTasks = () => {
-	const { search, tasks } = useStore();
-	return tasks.filter((task) => task.title.toLowerCase().includes(search.toLowerCase()));
+	const { search, tasks } = useStore()
+	return tasks.filter((task) => task.title.toLowerCase().includes(search.toLowerCase()))
 }

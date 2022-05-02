@@ -1,4 +1,4 @@
-lockfileVersion: 5.3
+lockfileVersion: 5.4
 
 specifiers:
   '@types/node': ^17.0.25
@@ -6,6 +6,7 @@ specifiers:
   '@types/react-dom': ^17.0.14
   '@vitejs/plugin-react': ^1.2.0
   autoprefixer: ^10.4.4
+  immer: ^9.0.12
   mobx: ^6.5.0
   mobz: ^0.20.0
   nanoid: ^3.3.1
@@ -22,13 +23,14 @@ specifiers:
   zustand: ^3.7.1
 
 dependencies:
+  immer: 9.0.12
   mobx: 6.5.0
   mobz: 0.20.0_mobx@6.5.0+react@17.0.2
   nanoid: 3.3.1
   react: 17.0.2
   react-dom: 17.0.2_react@17.0.2
-  react-router-dom: 6.2.2_react-dom@17.0.2+react@17.0.2
-  react-tracked: 1.7.9_react-dom@17.0.2+react@17.0.2
+  react-router-dom: 6.2.2_sfoxds7t5ydpegc3knd667wn6m
+  react-tracked: 1.7.9_sfoxds7t5ydpegc3knd667wn6m
   zustand: 3.7.1_react@17.0.2
 
 devDependencies:
@@ -39,7 +41,7 @@ devDependencies:
   autoprefixer: 10.4.4_postcss@8.4.12
   postcss: 8.4.12
   react-icons: 4.3.1_react@17.0.2
-  simple-zustand-devtools: 1.0.1_03674e752ca0d47d08c3e84f09d0e889
+  simple-zustand-devtools: 1.0.1_antu45jmudkh2cgd5bhqtuhire
   tailwindcss: 3.0.23_autoprefixer@10.4.4
   typescript: 4.6.3
   vite: 2.8.6
@@ -944,6 +946,10 @@ packages:
       '@babel/runtime': 7.17.8
     dev: false
 
+  /immer/9.0.12:
+    resolution: {integrity: sha512-lk7UNmSbAukB5B6dh9fnh5D0bJTOFKxVg2cyJWTYrWRfhLrLMBquONcUs3aFq507hNoIZEDDh8lb8UtOizSMhA==}
+    dev: false
+
   /import-fresh/3.3.0:
     resolution: {integrity: sha512-veYYhQa+D1QBKznvhUHxb8faxlrwUnxseDAbAp457E0wLNio2bOSKnjYDhMj+YiAq61xrMGhQk9iXVk5FzgQMw==}
     engines: {node: '>=6'}
@@ -1211,7 +1217,7 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /react-router-dom/6.2.2_react-dom@17.0.2+react@17.0.2:
+  /react-router-dom/6.2.2_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-AtYEsAST7bDD4dLSQHDnk/qxWLJdad5t1HFa1qJyUrCeGgEuCSw0VB/27ARbF9Fi/W5598ujvJOm3ujUCVzuYQ==}
     peerDependencies:
       react: '>=16.8'
@@ -1232,7 +1238,7 @@ packages:
       react: 17.0.2
     dev: false
 
-  /react-tracked/1.7.9_react-dom@17.0.2+react@17.0.2:
+  /react-tracked/1.7.9_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-axBJegjdQbsHizZ0DtEpM4g3sDW1SF5mq9j9bk77mRbcFR+OeBR4vLAqO7E6/DOPeGdDDqLBBIFBy5tmjnOd+A==}
     peerDependencies:
       react: '>=16.8.0'
@@ -1248,7 +1254,7 @@ packages:
       proxy-compare: 2.1.0
       react: 17.0.2
       react-dom: 17.0.2_react@17.0.2
-      use-context-selector: 1.3.10_react-dom@17.0.2+react@17.0.2
+      use-context-selector: 1.3.10_sfoxds7t5ydpegc3knd667wn6m
     dev: false
 
   /react/17.0.2:
@@ -1319,7 +1325,7 @@ packages:
     hasBin: true
     dev: true
 
-  /simple-zustand-devtools/1.0.1_03674e752ca0d47d08c3e84f09d0e889:
+  /simple-zustand-devtools/1.0.1_antu45jmudkh2cgd5bhqtuhire:
     resolution: {integrity: sha512-/+g+XA7ojPRa+ZDPy1dHBwtf+nBn+ZWN5RUTRgz1lNl5ZTqETo2uhjCl7KzQWlKzLO7CfQrmxK+dTI/5iAF3/Q==}
     peerDependencies:
       '@types/react': '>=16.8.23'
@@ -1415,7 +1421,7 @@ packages:
     hasBin: true
     dev: true
 
-  /use-context-selector/1.3.10_react-dom@17.0.2+react@17.0.2:
+  /use-context-selector/1.3.10_sfoxds7t5ydpegc3knd667wn6m:
     resolution: {integrity: sha512-xprS9YQ0F56IPTOjev+Lm+TWZD7Pa20+slBeaClt4YtOOoHKFOF3A9Cfr7LDcX2QIZ9VTyxXCnA6/WhL4Cm47g==}
     peerDependencies:
       react: '>=16.8.0'
