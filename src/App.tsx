@@ -7,14 +7,14 @@ import {Page404} from './screens/404';
 const App = () => {
 
 	return (
-		<div className='md:w-[500px] w-72 mx-7 min-h-fit border-2 border-lime-400 p-7 rounded-xl text-white text-center font-sans'>
-			<Routes>
-				<Route path='/' element={<Tasks />} />
-				<Route path='/details/:title' element={<Details />} />
-				<Route path='*' element={<Page404 />} />
-			</Routes>
-		</div>
-	);
+			<div className='w-screen max-w-screen-sm font-sans text-center text-white border-2 min-h-fit border-lime-400 p-7 rounded-xl'>
+				<Routes>
+					<Route path='/' element={<Tasks />} />
+					<Route path='/details/:title' element={<Details />} />
+					<Route path='*' element={<Page404 />} />
+				</Routes>
+			</div>
+	)
 };
 
 export default App;

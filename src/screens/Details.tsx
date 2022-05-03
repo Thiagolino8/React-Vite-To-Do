@@ -12,31 +12,30 @@ const Details = () => {
 	useEffect(() => {
 		if (!getTaskByTitle(title ?? "")) navigate("/error");
 	}, [])
-	const details = getTaskByTitle(title!)?.details ?? ''
+	const [details, setDetails] = useState(getTaskByTitle(title!)?.details ?? '')
   return (
 		<>
 			<h1 className='truncate'>{title}</h1>
-			<div className='flex-wrap h-full px-4 py-5 mx-5 text-center rounded-md bg-zinc-600'>
+			<div className='flex-wrap h-full mt-5 rounded-md bg-zinc-600'>
 				<span
 					role='textbox'
 					contentEditable
 					onBlur={(e) => {
-						changeDetails(title!, e.currentTarget.innerText);
+						changeDetails(title!, e.currentTarget.innerText)
+						setDetails(getTaskByTitle(title!)?.details ?? '')
 					}}
-					className='block w-full text-2xl font-bold whitespace-pre-wrap rounded-md outline-none resize-none pointer focus:bg-zinc-600 focus:outline-lime-400 empty:text-gray-300'
+					className='block text-xl whitespace-pre-wrap textarea-ghost textarea focus:textarea-primary empty:text-gray-300'
 				>
 					{details}
 				</span>
 			</div>
 			<div className='flex items-end justify-end p-4'>
 				<Link to='../'>
-					<div className=''>
 						<Button>Voltar</Button>
-					</div>
 				</Link>
 			</div>
 		</>
-	);
+	)
 };
 
 export default Details;

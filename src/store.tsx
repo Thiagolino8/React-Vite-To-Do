@@ -1,7 +1,7 @@
 import create, { State, StateCreator } from 'zustand'
 import { nanoid } from 'nanoid'
 import { createTrackedSelector } from 'react-tracked'
-import { persist } from 'zustand/middleware'
+import { persist, devtools } from 'zustand/middleware'
 import produce, { Draft } from 'immer'
 
 export interface Task {
@@ -33,7 +33,7 @@ const immer =
 
 export const useStore = createTrackedSelector(
 	create<TaskStore>(
-		persist(
+		persist(devtools(
 			immer((set, get) => ({
 				tasks: [],
 
@@ -48,8 +48,11 @@ export const useStore = createTrackedSelector(
 					}),
 
 				changeDetails: (title: string, details: string) => {
+					details = details.trim()
+					console.log(details)
 					set((draft) => {
 						draft.tasks = draft.tasks.map((task) => (task.title === title ? { ...task, details } : task))
+						console.log(draft.tasks)
 					})
 				},
 
@@ -103,6 +106,8 @@ export const useStore = createTrackedSelector(
 
 				getTaskById: (id: string) => get().tasks.find((task) => task.id === id),
 			})),
+		{name: 'tasks'}
+		),
 			{ name: 'taskStore' }
 		)
 	)
