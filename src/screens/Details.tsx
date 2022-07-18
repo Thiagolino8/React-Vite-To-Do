@@ -1,29 +1,24 @@
-import { useEffect, useState } from "react";
-import { useParams, Link, useNavigate } from "react-router-dom";
-import Button from "../components/Button";
-import { useStore } from "../store";
-import '../styles/Details.css';
+import '../styles/Details.css'
 
+import { Link, Navigate, useParams } from 'react-router-dom'
+
+import Button from '../components/Button'
+import { useStore } from '../store'
 
 const Details = () => {
-  const navigate = useNavigate();
 	const { title } = useParams()
 	const { getTaskByTitle, changeDetails } = useStore()
-	useEffect(() => {
-		if (!getTaskByTitle(title ?? "")) navigate("/error");
-	}, [])
-	const [details, setDetails] = useState(getTaskByTitle(title!)?.details ?? '')
-  return (
+	const details = getTaskByTitle(title!)?.details ?? ''
+	return !getTaskByTitle(title ?? '') ? (
+		<Navigate to='/error' />
+	) : (
 		<>
 			<h1 className='truncate'>{title}</h1>
 			<div className='flex-wrap h-full mt-5 rounded-md bg-zinc-600'>
 				<span
 					role='textbox'
 					contentEditable
-					onBlur={(e) => {
-						changeDetails(title!, e.currentTarget.innerText)
-						setDetails(getTaskByTitle(title!)?.details ?? '')
-					}}
+					onBlur={(e) => changeDetails(title!, e.currentTarget.innerText)}
 					className='block text-xl whitespace-pre-wrap textarea-ghost textarea focus:textarea-primary empty:text-gray-300'
 				>
 					{details}
@@ -31,11 +26,11 @@ const Details = () => {
 			</div>
 			<div className='flex items-end justify-end p-4'>
 				<Link to='../'>
-						<Button>Voltar</Button>
+					<Button>Back</Button>
 				</Link>
 			</div>
 		</>
 	)
-};
+}
 
-export default Details;
+export default Details

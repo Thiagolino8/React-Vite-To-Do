@@ -1,15 +1,16 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import './styles/index.css'
 import 'virtual:windi.css'
-import './styles/index.css';
-import App from './App';
-import { BrowserRouter } from 'react-router-dom';
 
-ReactDOM.render(
+import React from 'react'
+import ReactDOM from 'react-dom/client'
+import { BrowserRouter } from 'react-router-dom'
+
+import App from './App'
+
+ReactDOM.createRoot(document.getElementById('root')!).render(
 	<React.StrictMode>
 		<BrowserRouter>
 			<App />
 		</BrowserRouter>
-	</React.StrictMode>,
-	document.getElementById('root')
-);
+	</React.StrictMode>
+)

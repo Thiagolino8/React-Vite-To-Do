@@ -1,17 +1,17 @@
-import { useNavigate } from 'react-router-dom'
-import { CgClose, CgInfo, CgTrash } from 'react-icons/cg'
-import { AiOutlineCheck } from 'react-icons/ai'
-import { useStore } from '../store'
-import type { Task } from '../store'
-import { useState } from 'react'
+import { useState } from 'react';
+import { AiOutlineCheck } from 'react-icons/ai';
+import { CgClose, CgInfo, CgTrash } from 'react-icons/cg';
+import { Link } from 'react-router-dom';
 
+import { useStore } from '../store';
+
+import type { Task } from '../store'
 interface Props {
 	task: Task
 }
 
 const TaskRender = ({ task }: Props) => {
 	const [value, setValue] = useState(task.title)
-	const navigate = useNavigate()
 	const { deleteTask, toggleTask, updateTask, getTaskById, formatTaskTitle } = useStore()
 	return (
 		<div
@@ -41,15 +41,17 @@ const TaskRender = ({ task }: Props) => {
 			<div className='flex items-end gap-2'>
 				<button className='btn btn-link hover:btn-primary swap swap-rotate' onClick={() => toggleTask(task.id)}>
 					<input type='checkbox' checked={task.completed} />
-						<CgClose className='fill-current swap-on' />
-						<AiOutlineCheck className='fill-current swap-off' />
+					<CgClose className='fill-current swap-on' />
+					<AiOutlineCheck className='fill-current swap-off' />
 				</button>
 				<button className='btn btn-link hover:btn-primary' onClick={() => deleteTask(task.id)}>
 					<CgTrash />
 				</button>
-				<button className='btn btn-link hover:btn-primary' onClick={() => navigate(`/details/${task.title}`)}>
-					<CgInfo />
-				</button>
+				<Link to={`/details/${task.title}`}>
+					<button className='btn btn-link hover:btn-primary'>
+						<CgInfo />
+					</button>
+				</Link>
 			</div>
 		</div>
 	)

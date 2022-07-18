@@ -1,8 +1,8 @@
-import create, { State, StateCreator } from 'zustand'
 import { nanoid } from 'nanoid'
 import { createTrackedSelector } from 'react-tracked'
-import { persist, devtools } from 'zustand/middleware'
-import produce, { Draft } from 'immer'
+import create from 'zustand'
+import { devtools, persist } from 'zustand/middleware'
+import { immer } from 'zustand/middleware/immer'
 
 export interface Task {
 	id: string
@@ -26,89 +26,82 @@ interface TaskStore {
 	formatTaskTitle: (title: string) => string
 }
 
-const immer =
-	<T extends State>(config: StateCreator<T, (fn: (draft: Draft<T>) => void) => void>): StateCreator<T> =>
-	(set, get, api) =>
-		config((fn) => set(produce<T>(fn)), get, api)
-
 export const useStore = createTrackedSelector(
-	create<TaskStore>(
-		persist(devtools(
-			immer((set, get) => ({
-				tasks: [],
+	create<TaskStore>()(
+		immer(
+			persist(
+				devtools((set, get) => ({
+					tasks: [],
 
-				search: '',
+					search: '',
 
-				addTask: (title: string) =>
-					set((draft) => {
-						if (!title) return
-						title = get().formatTaskTitle(title)
+					addTask: (title: string) =>
+						set((state) => {
+							if (!title) return
+							title = get().formatTaskTitle(title)
+							if (get().taskAlreadyExists(title)) return
+							state.tasks.push({ id: nanoid(), title, completed: false, details: '' })
+						}),
+
+					changeDetails: (title: string, details: string) => {
+						details = details.trim()
+						set((state) => {
+							state.tasks = state.tasks.map((task) => (task.title === title ? { ...task, details } : task))
+						})
+					},
+
+					toggleTask: (id: string) =>
+						set((state) => {
+							state.tasks = state.tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
+						}),
+
+					deleteTask: (id: string) =>
+						set((state) => {
+							state.tasks = state.tasks.filter((task) => task.id !== id)
+						}),
+
+					setSearch: (search: string) =>
+						set((state) => {
+							state.search = search
+						}),
+
+					updateTask: (id: string, title: string) => {
+						if (!title) {
+							get().deleteTask(id)
+							return
+						}
 						if (get().taskAlreadyExists(title)) return
-						draft.tasks.push({ id: nanoid(), title, completed: false, details: '' })
-					}),
+						set((state) => {
+							state.tasks = state.tasks.map((task) =>
+								task.id === id ? { ...task, title: get().formatTaskTitle(title) } : task
+							)
+						})
+					},
 
-				changeDetails: (title: string, details: string) => {
-					details = details.trim()
-					console.log(details)
-					set((draft) => {
-						draft.tasks = draft.tasks.map((task) => (task.title === title ? { ...task, details } : task))
-						console.log(draft.tasks)
-					})
-				},
+					getTaskByTitle: (title: string) => get().tasks.find((task) => task.title === get().formatTaskTitle(title)),
 
-				toggleTask: (id: string) =>
-					set((draft) => {
-						draft.tasks = draft.tasks.map((task) => (task.id === id ? { ...task, completed: !task.completed } : task))
-					}),
+					taskAlreadyExists: (title: string) => {
+						if (
+							get()
+								.tasks.map((task) => get().formatTaskTitle(task.title) === get().formatTaskTitle(title))
+								.includes(true)
+						) {
+							alert('Task already exists')
+							return true
+						}
+						return false
+					},
 
-				deleteTask: (id: string) =>
-					set((draft) => {
-						draft.tasks = draft.tasks.filter((task) => task.id !== id)
-					}),
+					formatTaskTitle: (title: string) =>
+						title
+							.split(' ')
+							.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+							.join(' '),
 
-				setSearch: (search: string) =>
-					set((draft) => {
-						draft.search = search
-					}),
-
-				updateTask: (id: string, title: string) => {
-					if (!title) {
-						get().deleteTask(id)
-						return
-					}
-					if (get().taskAlreadyExists(title)) return
-					set((draft) => {
-						draft.tasks = draft.tasks.map((task) =>
-							task.id === id ? { ...task, title: get().formatTaskTitle(title) } : task
-						)
-					})
-				},
-
-				getTaskByTitle: (title: string) => get().tasks.find((task) => task.title === get().formatTaskTitle(title)),
-
-				taskAlreadyExists: (title: string) => {
-					if (
-						get()
-							.tasks.map((task) => get().formatTaskTitle(task.title) === get().formatTaskTitle(title))
-							.includes(true)
-					) {
-						alert('Task already exists')
-						return true
-					}
-					return false
-				},
-
-				formatTaskTitle: (title: string) =>
-					title
-						.split(' ')
-						.map((word) => word.charAt(0).toUpperCase() + word.slice(1))
-						.join(' '),
-
-				getTaskById: (id: string) => get().tasks.find((task) => task.id === id),
-			})),
-		{name: 'tasks'}
-		),
-			{ name: 'taskStore' }
+					getTaskById: (id: string) => get().tasks.find((task) => task.id === id),
+				})),
+				{ name: 'taskStore' }
+			)
 		)
 	)
 )
